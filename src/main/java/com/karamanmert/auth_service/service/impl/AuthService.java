@@ -1,0 +1,113 @@
+package com.karamanmert.auth_service.service.impl;
+
+import com.karamanmert.auth_service.entity.AuthUser;
+import com.karamanmert.auth_service.model.AuthUserPrincipal;
+import com.karamanmert.auth_service.model.dto.AuthUserDetailsDto;
+import com.karamanmert.auth_service.model.request.CreateAuthUserRequest;
+import com.karamanmert.auth_service.model.response.TokenResponse;
+import com.karamanmert.auth_service.repository.AuthUserRepository;
+import com.karamanmert.auth_service.service.spec.JwtService;
+import com.karamanmert.auth_service.enums.UserRole;
+import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.security.authentication.AuthenticationServiceException;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.stereotype.Service;
+
+import java.security.Principal;
+import java.util.List;
+import java.util.Optional;
+
+/**
+ * @author karamanmert
+ * @date 11.11.2024
+ */
+@Service
+@RequiredArgsConstructor
+@Slf4j
+public class AuthService {
+
+    private final AuthUserRepository authUserRepository;
+    private final PasswordEncoder passwordEncoder;
+    private final JwtService jwtService;
+
+    public void createUser(CreateAuthUserRequest request) {
+        AuthUser authUser = buildAuthUserFromRequest(request);
+        // todo: pre checks will added later.
+        authUserRepository.save(authUser);
+        log.info("Saved user: {}", authUser);
+    }
+
+    public List<AuthUser> getAllUsers() {
+        return authUserRepository.findAll();
+    }
+
+    public TokenResponse login(Principal principal) {
+        AuthUser user = this.extractEntityByPrincipleAndEntity(principal, AuthUser.class);
+        if (user == null) {
+            throw new AuthenticationServiceException("User not found");
+        }
+        AuthUserDetailsDto userDetailsDto = AuthUserDetailsDto.builder()
+                .role(user.getRole())
+                .email(user.getEmail())
+                .name(user.getName())
+                .build();
+        return jwtService.generateToken(userDetailsDto);
+        /*
+        // we can also do these steps on loadByUsername part.
+        Authentication authentication = authenticationManager
+                .authenticate(new UsernamePasswordAuthenticationToken(
+                        request.getEmail(), request.getPassword()
+                ));
+
+        if (authentication.isAuthenticated()) {
+            Optional<AuthUser> user = authUserRepository.findByUsername(request.getEmail());
+            AuthUserDetailsDto userDetailsDto = null;
+            if (user.isPresent()) {
+                userDetailsDto = AuthUserDetailsDto.builder()
+                        .role(user.get().getRole())
+                        .email(user.get().getEmail())
+                        .name(user.get().getName())
+                        .build();
+            }
+            return jwtService.generateToken(userDetailsDto);
+        } else {
+            throw new AuthenticationServiceException("Invalid username or password");
+        }
+
+         */
+    }
+
+    private AuthUser buildAuthUserFromRequest(CreateAuthUserRequest request) {
+        final UserRole role = request.getRole() == null ? UserRole.ROLE_USER : request.getRole();
+        final String encodedPassword = passwordEncoder.encode(request.getPassword());
+
+        return AuthUser.builder()
+                .email(request.getEmail())
+                .password(encodedPassword)
+                .name(request.getName())
+                .role(role)
+                .build();
+    }
+
+    public void deleteUser(String username) {
+        Optional<AuthUser> user = authUserRepository.findByUsername(username);
+        if (user.isEmpty()) {
+            throw new AuthenticationServiceException("User not found");
+        }
+        authUserRepository.delete(user.get());
+    }
+
+    private <T> T extractEntityByPrincipleAndEntity(Principal principal, Class<T> clazz) {
+        return Optional.of(principal)
+                .map(UsernamePasswordAuthenticationToken.class::cast)
+                .map(UsernamePasswordAuthenticationToken::getPrincipal)
+                .filter(AuthUserPrincipal.class::isInstance)
+                .map(AuthUserPrincipal.class::cast)
+                .map(AuthUserPrincipal::getAuthUser)
+                .filter(clazz::isInstance)
+                .map(clazz::cast)
+                .orElseThrow(() -> new RuntimeException("User not found"));
+    }
+}

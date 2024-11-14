@@ -1,0 +1,25 @@
+# Spring Boot specific
+target/
+bin/
+build/
+tmp/
+*.log
+*.tmp
+*.pid
+
+# IDE specific
+.idea/
+.vscode/
+*.iml
+*.ipr
+*.iws
+
+# Maven specific
+log/
+*.jar
+*.war
+*.ear
+
+.DS_Store
+
+qodana.yaml
