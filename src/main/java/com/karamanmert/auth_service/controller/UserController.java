@@ -1,7 +1,7 @@
 package com.karamanmert.auth_service.controller;
 
 import com.karamanmert.auth_service.entity.AuthUser;
-import com.karamanmert.auth_service.service.impl.AuthService;
+import com.karamanmert.auth_service.service.spec.AuthService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
