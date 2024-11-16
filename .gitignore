@@ -3,7 +3,8 @@ target/
 bin/
 build/
 tmp/
-.gradle
+.gradle/
+.gitattributes
 *.log
 *.tmp
 *.pid

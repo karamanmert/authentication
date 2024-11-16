@@ -14,7 +14,6 @@ import java.util.Collections;
  * @date 13.11.2024
  */
 // service?
-@Getter
 public record AuthUserPrincipal(AuthUser authUser) implements UserDetails {
 
     @Override
