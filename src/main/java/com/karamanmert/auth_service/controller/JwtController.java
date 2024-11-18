@@ -10,6 +10,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 /**
@@ -40,9 +41,8 @@ public class JwtController {
 
     // (you can take token from request param or path variable or headers)
     @GetMapping("/validate")
-    public ResponseEntity<Boolean> validateToken() {
+    public ResponseEntity<Boolean> validateToken(@RequestParam(value = "token") String token) {
         //run the getToken and use the token
-        String token = "eyJhbGciOiJIUzM4NCJ9.eyJyb2xlIjoiUk9MRV9VU0VSIiwibmFtZSI6Im1lcnQiLCJlbWFpbCI6Im1lcnR0ZXN0QHlvcG1haWwuY29tIiwic3ViIjoibWVydHRlc3RAeW9wbWFpbC5jb20iLCJpYXQiOjE3MzE5MzgwNTcsImV4cCI6MTczMTkzOTg1N30.jELkkdnmbDDpSqeSWz94GYCxw9uknpC0prs7ZEH_ssfyjYZZLlubUuYKZFpweZCF";
 
         AuthUserPrincipal principal = new AuthUserPrincipal(
                 AuthUser.builder()
@@ -55,8 +55,9 @@ public class JwtController {
     }
 
     @GetMapping("/username")
-    public ResponseEntity<String> getUsername() {
-        String token = "eyJhbGciOiJIUzM4NCJ9.eyJyb2xlIjoiUk9MRV9VU0VSIiwibmFtZSI6Im1lcnQiLCJlbWFpbCI6Im1lcnR0ZXN0QHlvcG1haWwuY29tIiwic3ViIjoibWVydHRlc3RAeW9wbWFpbC5jb20iLCJpYXQiOjE3MzE5MzgwNTcsImV4cCI6MTczMTkzOTg1N30.jELkkdnmbDDpSqeSWz94GYCxw9uknpC0prs7ZEH_ssfyjYZZLlubUuYKZFpweZCF";
+    // (you can take token from request param or path variable or headers)
+    public ResponseEntity<String> getUsername(@RequestParam(value = "token") String token) {
+        //String token = "eyJhbGciOiJIUzM4NCJ9.eyJyb2xlIjoiUk9MRV9VU0VSIiwibmFtZSI6Im1lcnQiLCJlbWFpbCI6Im1lcnR0ZXN0QHlvcG1haWwuY29tIiwic3ViIjoibWVydHRlc3RAeW9wbWFpbC5jb20iLCJpYXQiOjE3MzE5MzgwNTcsImV4cCI6MTczMTkzOTg1N30.jELkkdnmbDDpSqeSWz94GYCxw9uknpC0prs7ZEH_ssfyjYZZLlubUuYKZFpweZCF";
         return ResponseEntity.ok(jwtService.extractUsername(token));
     }
 }
