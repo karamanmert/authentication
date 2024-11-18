@@ -27,7 +27,7 @@ public class AuthUser {
     @Column(name = "name")
     private String name;
 
-    @Column(name = "email") // also known as USERNAME
+    @Column(name = "email", unique = true) // also known as USERNAME
     private String email;
 
     @Column(name = "password")
