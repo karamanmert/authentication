@@ -1,0 +1,251 @@
+{
+	"info": {
+		"_postman_id": "c44f0ce7-ef1e-4724-914a-cc00c99546bb",
+		"name": "auth",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "9698855"
+	},
+	"item": [
+		{
+			"name": "auth",
+			"item": [
+				{
+					"name": "register",
+					"request": {
+						"auth": {
+							"type": "noauth"
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"name\": \"mert\",\n    \"email\":\"merttest@yopmail.com\",\n    \"password\":\"password\",\n    \"role\": \"ROLE_ADMIN\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:9090/auth/register",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "9090",
+							"path": [
+								"auth",
+								"register"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "login",
+					"request": {
+						"auth": {
+							"type": "basic",
+							"basic": [
+								{
+									"key": "username",
+									"value": "merttest@yopmail.com",
+									"type": "string"
+								},
+								{
+									"key": "password",
+									"value": "password",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:9090/auth/login",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "9090",
+							"path": [
+								"auth",
+								"login"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "jwt",
+			"item": [
+				{
+					"name": "token",
+					"request": {
+						"auth": {
+							"type": "basic",
+							"basic": [
+								{
+									"key": "username",
+									"value": "merttest@yopmail.com",
+									"type": "string"
+								},
+								{
+									"key": "password",
+									"value": "password",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:9090/jwt/token",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "9090",
+							"path": [
+								"jwt",
+								"token"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "validate",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:9090/jwt/validate?token=eyJhbGciOiJIUzM4NCJ9.eyJyb2xlIjoiUk9MRV9VU0VSIiwibmFtZSI6Im1lcnQiLCJlbWFpbCI6Im1lcnR0ZXN0QHlvcG1haWwuY29tIiwic3ViIjoibWVydHRlc3RAeW9wbWFpbC5jb20iLCJpYXQiOjE3MzE5NDIzNTgsImV4cCI6MTczMTk0NDE1OH0.Gyd87A1-b7xAxa197IcgHSLJioE1wbajZig7BtyC_xuj35ly70nvJaCUI0skaHBl",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "9090",
+							"path": [
+								"jwt",
+								"validate"
+							],
+							"query": [
+								{
+									"key": "token",
+									"value": "eyJhbGciOiJIUzM4NCJ9.eyJyb2xlIjoiUk9MRV9VU0VSIiwibmFtZSI6Im1lcnQiLCJlbWFpbCI6Im1lcnR0ZXN0QHlvcG1haWwuY29tIiwic3ViIjoibWVydHRlc3RAeW9wbWFpbC5jb20iLCJpYXQiOjE3MzE5NDIzNTgsImV4cCI6MTczMTk0NDE1OH0.Gyd87A1-b7xAxa197IcgHSLJioE1wbajZig7BtyC_xuj35ly70nvJaCUI0skaHBl"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "username",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:9090/jwt/username?token=eyJhbGciOiJIUzM4NCJ9.eyJyb2xlIjoiUk9MRV9VU0VSIiwibmFtZSI6Im1lcnQiLCJlbWFpbCI6Im1lcnR0ZXN0QHlvcG1haWwuY29tIiwic3ViIjoibWVydHRlc3RAeW9wbWFpbC5jb20iLCJpYXQiOjE3MzE5NDIzNTgsImV4cCI6MTczMTk0NDE1OH0.Gyd87A1-b7xAxa197IcgHSLJioE1wbajZig7BtyC_xuj35ly70nvJaCUI0skaHBl",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "9090",
+							"path": [
+								"jwt",
+								"username"
+							],
+							"query": [
+								{
+									"key": "token",
+									"value": "eyJhbGciOiJIUzM4NCJ9.eyJyb2xlIjoiUk9MRV9VU0VSIiwibmFtZSI6Im1lcnQiLCJlbWFpbCI6Im1lcnR0ZXN0QHlvcG1haWwuY29tIiwic3ViIjoibWVydHRlc3RAeW9wbWFpbC5jb20iLCJpYXQiOjE3MzE5NDIzNTgsImV4cCI6MTczMTk0NDE1OH0.Gyd87A1-b7xAxa197IcgHSLJioE1wbajZig7BtyC_xuj35ly70nvJaCUI0skaHBl"
+								}
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "user",
+			"item": [
+				{
+					"name": "delete user",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "eyJhbGciOiJIUzM4NCJ9.eyJyb2xlIjoiUk9MRV9BRE1JTiIsIm5hbWUiOiJtZXJ0MyIsImVtYWlsIjoibWVydGtybW4wNjNAZ21haWwuY29tIiwic3ViIjoibWVydGtybW4wNjNAZ21haWwuY29tIiwiaWF0IjoxNzMxNjA5NjY1LCJleHAiOjE3MzE2MTE0NjV9.cAFR3dUGMZgafmjE5OA8qYEADnn_E8xCZtLMtFJJ78Xmt48kZDVC-hDEQrz1aLwI",
+									"type": "string"
+								}
+							]
+						},
+						"method": "DELETE",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer eyJhbGciOiJIUzM4NCJ9.eyJzdWIiOiJtZXJ0a3JtbjA2QGdtYWlsLmNvbSIsImlhdCI6MTczMTYwNzkwMCwiZXhwIjoxNzMxNjA5NzAwfQ.3zrClARz5amzc3KVoOzJafsbjOP2zL2JDpAee1GKXoSJxwYXq5_hG98fa5VkB4rp",
+								"type": "text",
+								"disabled": true
+							}
+						],
+						"url": {
+							"raw": "http://localhost:9090/users/mertkrmn062@gmail.com",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "9090",
+							"path": [
+								"users",
+								"mertkrmn062@gmail.com"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "list all",
+					"request": {
+						"auth": {
+							"type": "basic",
+							"basic": [
+								{
+									"key": "password",
+									"value": "password",
+									"type": "string"
+								},
+								{
+									"key": "username",
+									"value": "mertkrmn06@gmail.com",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:9090/auth/token",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "9090",
+							"path": [
+								"auth",
+								"token"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		}
+	]
+}
