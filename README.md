@@ -7,3 +7,9 @@ Auth Service
 3- On the authentication side, you can register, then log in to obtain a JWT token and use that token to make requests to endpoints.
 
 4- You can perform actions based on the permissions of the token you receive.
+
+
+
+POSTMAN COLLECTION TO PLAY ->
+
+auth.postman_collection.json
