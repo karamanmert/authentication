@@ -1,7 +1,7 @@
 package com.karamanmert.auth_service.service.impl;
 
 import com.karamanmert.auth_service.entity.AuthUser;
-import com.karamanmert.auth_service.model.AuthUserPrincipal;
+import com.karamanmert.auth_service.model.dto.AuthUserPrincipal;
 import com.karamanmert.auth_service.repository.AuthUserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.userdetails.UserDetails;

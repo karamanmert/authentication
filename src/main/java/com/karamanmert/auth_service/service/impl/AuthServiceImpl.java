@@ -2,8 +2,8 @@ package com.karamanmert.auth_service.service.impl;
 
 import com.karamanmert.auth_service.entity.AuthUser;
 import com.karamanmert.auth_service.enums.UserRole;
-import com.karamanmert.auth_service.model.AuthUserPrincipal;
 import com.karamanmert.auth_service.model.dto.AuthUserDetailsDto;
+import com.karamanmert.auth_service.model.dto.AuthUserPrincipal;
 import com.karamanmert.auth_service.model.request.CreateAuthUserRequest;
 import com.karamanmert.auth_service.model.response.TokenResponse;
 import com.karamanmert.auth_service.repository.AuthUserRepository;
@@ -35,11 +35,15 @@ public class AuthServiceImpl implements AuthService {
 
     @Override
     public void createUser(CreateAuthUserRequest request) {
-        AuthUser authUser = buildAuthUserFromRequest(request);
-        // todo: pre checks will added later.
+        this.checkUserNotExistWithUsername(request);
+
+        final AuthUser authUser = buildAuthUserFromRequest(request);
+
         authUserRepository.save(authUser);
+
         log.info("Saved user: {}", authUser);
     }
+
 
     @Override
     public List<AuthUser> getAllUsers() {
@@ -49,9 +53,11 @@ public class AuthServiceImpl implements AuthService {
     @Override
     public void deleteUser(String username) {
         Optional<AuthUser> user = authUserRepository.findByUsername(username);
+
         if (user.isEmpty()) {
             throw new AuthenticationServiceException("User not found");
         }
+
         authUserRepository.delete(user.get());
     }
 
@@ -96,13 +102,13 @@ public class AuthServiceImpl implements AuthService {
     }
 
     private AuthUser buildAuthUserFromRequest(CreateAuthUserRequest request) {
-        final UserRole role = request.getRole() == null ? UserRole.ROLE_USER : request.getRole();
-        final String encodedPassword = passwordEncoder.encode(request.getPassword());
+        final UserRole role = request.userRole() == null ? UserRole.ROLE_USER : request.userRole();
+        final String encodedPassword = passwordEncoder.encode(request.password());
 
         return AuthUser.builder()
-                .email(request.getEmail())
+                .email(request.email())
                 .password(encodedPassword)
-                .name(request.getName())
+                .name(request.name())
                 .role(role)
                 .build();
     }
@@ -117,5 +123,13 @@ public class AuthServiceImpl implements AuthService {
                 .filter(clazz::isInstance)
                 .map(clazz::cast)
                 .orElseThrow(() -> new RuntimeException("User not found"));
+    }
+
+    private void checkUserNotExistWithUsername(CreateAuthUserRequest request) {
+        Optional<AuthUser> user = authUserRepository.findByUsername(request.email());
+
+        if (user.isPresent()) {
+            throw new AuthenticationServiceException("User already exists");
+        }
     }
 }

@@ -17,13 +17,15 @@ import java.util.List;
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/users")
-// jwt bearer token test controller
+/**
+ * jwt bearer token test controller
+ * take a token then try to access below apis
+ */
 public class UserController {
 
     private final AuthService authService;
 
-    @GetMapping("/all")
-    // anybody with right bearer token can access
+    @GetMapping("/all")  // anybody with right bearer token can access
     public ResponseEntity<List<AuthUser>> getAllUsers() {
         return ResponseEntity.ok(authService.getAllUsers());
     }

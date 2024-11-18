@@ -53,13 +53,18 @@ public class JwtFilter extends OncePerRequestFilter {
                         userDetails, null, userDetails.getAuthorities()
                 );
 
+                /*
+                authentication.setDetails(new WebAuthenticationDetailsSource()
+                        .buildDetails(request));
+                What Happens If Removed?
+                The authentication process will still work as long as the token and user details are valid.
+                However, SecurityContextHolder will not have details about the request (e.g., IP, session ID),
+                which may impact logging, debugging, or any custom security features relying on WebAuthenticationDetails.
+                 */
                 authentication.setDetails(new WebAuthenticationDetailsSource()
                         .buildDetails(request));
 
                 SecurityContextHolder.getContext().setAuthentication(authentication);
-            }
-            else {
-                System.out.println("Token validation failed for user: " + username);
             }
         }
         filterChain.doFilter(request, response);

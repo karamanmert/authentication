@@ -40,7 +40,9 @@ public class SecurityConfiguration {
                 .authorizeHttpRequests(
                         auth -> auth.requestMatchers(
                                         "/auth/register",
-                                        "/auth/login")
+                                        "/auth/login",
+                                        "/jwt/**"
+                                )
                                 .permitAll() // do not force these to authenticate.
                                 .requestMatchers(HttpMethod.DELETE, "/users/**").hasRole("ADMIN")
                                 .anyRequest()

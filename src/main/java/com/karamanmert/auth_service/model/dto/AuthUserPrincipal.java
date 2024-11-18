@@ -1,7 +1,6 @@
-package com.karamanmert.auth_service.model;
+package com.karamanmert.auth_service.model.dto;
 
 import com.karamanmert.auth_service.entity.AuthUser;
-import lombok.Getter;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -13,7 +12,6 @@ import java.util.Collections;
  * @author karamanmert
  * @date 13.11.2024
  */
-// service?
 public record AuthUserPrincipal(AuthUser authUser) implements UserDetails {
 
     @Override

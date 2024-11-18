@@ -31,6 +31,7 @@ public class JwtServiceImpl implements JwtService {
     public TokenResponse generateToken(AuthUserDetailsDto userDetails) {
         Map<String, Object> claims = new HashMap<>();
         String token = this.createToken(claims, userDetails);
+
         return TokenResponse.builder()
                 .accessToken(token)
                 .build();
@@ -44,6 +45,7 @@ public class JwtServiceImpl implements JwtService {
     @Override
     public boolean validateToken(String token, UserDetails userDetails) {
         final String username = extractUsername(token);
+
         return (username.equals(userDetails.getUsername()) && !isTokenExpired(token));
     }
 
@@ -53,6 +55,7 @@ public class JwtServiceImpl implements JwtService {
                 .build()
                 .parseSignedClaims(token)
                 .getPayload();
+
         return claimsResolver.apply(claims);
     }
 
