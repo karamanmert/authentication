@@ -36,4 +36,8 @@ public class AuthUser {
     @Enumerated(value = EnumType.STRING)
     @Column(name = "role")
     private UserRole role;
+
+    @OneToOne(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    @JoinColumn(name = "token_id", referencedColumnName = "id")
+    private Token token;
 }

@@ -1,6 +1,7 @@
 package com.karamanmert.auth_service.service.impl;
 
 import com.karamanmert.auth_service.entity.AuthUser;
+import com.karamanmert.auth_service.entity.Token;
 import com.karamanmert.auth_service.enums.UserRole;
 import com.karamanmert.auth_service.model.dto.AuthUserDetailsDto;
 import com.karamanmert.auth_service.model.dto.AuthUserPrincipal;
@@ -9,15 +10,18 @@ import com.karamanmert.auth_service.model.response.TokenResponse;
 import com.karamanmert.auth_service.repository.AuthUserRepository;
 import com.karamanmert.auth_service.service.spec.AuthService;
 import com.karamanmert.auth_service.service.spec.JwtService;
+import com.karamanmert.auth_service.service.spec.TokenService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.authentication.AuthenticationServiceException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.security.Principal;
 import java.util.List;
+import java.util.Objects;
 import java.util.Optional;
 
 /**
@@ -32,6 +36,7 @@ public class AuthServiceImpl implements AuthService {
     private final AuthUserRepository authUserRepository;
     private final PasswordEncoder passwordEncoder;
     private final JwtService jwtService;
+    private final TokenService tokenService;
 
     @Override
     public void createUser(CreateAuthUserRequest request) {
@@ -51,6 +56,7 @@ public class AuthServiceImpl implements AuthService {
     }
 
     @Override
+    @Transactional
     public void deleteUser(String username) {
         Optional<AuthUser> user = authUserRepository.findByUsername(username);
 
@@ -58,10 +64,17 @@ public class AuthServiceImpl implements AuthService {
             throw new AuthenticationServiceException("User not found");
         }
 
+        final Token token = user.get().getToken();
+        if (Objects.nonNull(token)) {
+            tokenService.delete(token);
+        }
+
         authUserRepository.delete(user.get());
     }
 
+
     @Override
+    @Transactional
     public TokenResponse login(Principal principal) {
         AuthUser user = this.extractEntityByPrincipleAndEntity(principal, AuthUser.class);
 
@@ -75,7 +88,19 @@ public class AuthServiceImpl implements AuthService {
                 .name(user.getName())
                 .build();
 
-        return jwtService.generateToken(userDetailsDto);
+        TokenResponse tokenResponse = jwtService.generateToken(userDetailsDto);
+
+        if (user.getToken() != null) {
+            Token token = Token.builder()
+                    .accessToken(tokenResponse.accessToken())
+                    .user(user)
+                    .build();
+            user.setToken(token);
+            tokenService.save(token);
+        }
+
+        this.authUserRepository.save(user);
+        return tokenResponse;
         /*
         // we can also do these steps on loadByUsername part.
         Authentication authentication = authenticationManager
@@ -100,6 +125,22 @@ public class AuthServiceImpl implements AuthService {
 
          */
     }
+
+    @Override
+    public void logout(String token) {
+
+        if (token.isBlank()) {
+            throw new RuntimeException("token must be not null");
+        }
+
+        tokenService.deleteByAccessToken(token);
+    }
+
+    @Override
+    public AuthUser update(AuthUser user) {
+        return null;
+    }
+
 
     private AuthUser buildAuthUserFromRequest(CreateAuthUserRequest request) {
         final UserRole role = request.userRole() == null ? UserRole.ROLE_USER : request.userRole();

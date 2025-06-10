@@ -19,3 +19,10 @@ logging:
 
 jwt:
   secret: 5bT2avsDo2Bo3lQG6glfbmRDBFf0oWQQFbo8d7vurf1S2ziuUVGZA8qUevMOYdvJ
+
+eureka:
+  client:
+    service-url:
+      defaultZone: http://localhost:8761/eureka
+      register-with-eureka: true
+      fetch-registry: true
