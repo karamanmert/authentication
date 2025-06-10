@@ -20,4 +20,8 @@ public interface AuthService {
     void deleteUser(String username);
 
     TokenResponse login(Principal principal);
+
+    void logout(String token);
+
+    AuthUser update(AuthUser user);
 }

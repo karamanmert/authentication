@@ -6,10 +6,7 @@ import com.karamanmert.auth_service.service.spec.AuthService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.security.Principal;
 
@@ -34,5 +31,12 @@ public class AuthenticationController {
     @PostMapping("/login")
     public ResponseEntity<TokenResponse> login(Principal principal) {
         return ResponseEntity.status(HttpStatus.CREATED).body(authService.login(principal));
+    }
+
+
+    @DeleteMapping("/logout")
+    public ResponseEntity<Void> logout(@RequestParam String token) {
+        this.authService.logout(token);
+        return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
     }
 }
